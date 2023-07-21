@@ -60,7 +60,7 @@ for(const cat of cats) {
       <div class="card-body">
         <h5 class="card-title">${cat.name}</h5>
         <p class="card-text">${cat.bio}</p>
-        <a href="#" class="btn btn-light">Like</a>
+        <a href="#" class="btn btn-light like" data-catname="${cat.name}" data-catbio="${cat.bio}" data-catthumb="${cat.thumb}" data-catfullimg="${cat.img}">Like</a>
       </div>
     </div>
   </div>`
@@ -77,4 +77,75 @@ function openModal(e){
     const fullSizeImage = e.target.dataset.fullimg
     document.querySelector(".modal-body").innerHTML = `<img src="${fullSizeImage}" alt="placeholder kitten">`
   }
+}
+
+/*--------------------------------------------------------------------
+                                WEEK 11
+--------------------------------------------------------------------*/
+// get the savedCats from localStorage
+let savedCats = localStorage.getItem("mycats")
+// if the saved cats are null then !savedCats will be true
+if (!savedCats){
+//set savedCats to an empty array
+  savedCats = []
+} else {
+//if savedCats is not null then set savedCats to parsed value of savedCats
+  savedCats = JSON.parse(savedCats)
+}
+
+const likeButtons = document.querySelectorAll(".like")
+if(likeButtons.length > 0){
+  for(const likeButton of likeButtons) {
+    likeButton.addEventListener("click", likeCat)
+    //loop over the savedCats array and check if any catName matches with this button cat name
+    for(savedCat of savedCats){
+      if(savedCat.name == likeButton.dataset.catname){
+        likeButton.classList.remove("btn-light")
+        likeButton.classList.add("btn-danger")
+        likeButton.textContent = "Liked"
+      }
+    }
+  }
+}
+
+function likeCat(e){
+  e.preventDefault() //stops the page from jumping
+  const catName = this.dataset.catname
+  const catBio = this.dataset.catbio
+  const catThumb = this.dataset.catthumb
+  const catImg = this.dataset.catfullimg
+  const catInfo = { name: catName, bio: catBio, thumb: catThumb, img: catImg }
+  console.log(catInfo)
+
+  //check if the catName exists in the array from localStorage
+  const catExist = findCat(catName)
+  console.log(catExist)
+
+  //if the catName existed we will get a number from findCat function
+  if (catExist !== null){
+    //display an alert to the user
+    alert("this cat is already liked")
+  }else{
+    //the findCat method did not return a number
+    //push the cat object to savedCats array
+    savedCats.push(catInfo)
+
+    // stringify the savedCats array and add it to localStorage mycats
+    localStorage.setItem("mycats", JSON.stringify(savedCats))
+
+    //update button style
+    this.classList.remove("btn-light")
+    this.classList.add("btn-danger")
+    this.textContent = "liked"
+  }
+
+}
+
+function findCat(catName){
+  for(savedCat of savedCats){
+    if(savedCat.name == catName){
+      return savedCats.indexOf(savedCat)
+    }
+  }
+  return null
 }
