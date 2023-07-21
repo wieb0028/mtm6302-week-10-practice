@@ -155,3 +155,52 @@ function findCat(catName){
 
 //display cats from localStorage
 
+const likedCatsRow = document.getElementById("likedCatsRow")
+
+if(likedCatsRow){
+  showCats()
+  function showCats(){
+  // if savedCats array contains one or more cats then display yhe cats
+  if(savedCats.length > 0){
+    
+    const likedCards = []
+    for(const cat of savedCats){
+      const card = `
+      <div class="col">
+        <div class="card">
+          <img data-bs-toggle="modal" data-bs-target="#exampleModal" src="${cat.thumb}" data-fullimg="${cat.img}" class="card-img-top" alt="placeholder kitten">
+          <div class="card-body">
+            <h5 class="card-title">${cat.name}</h5>
+            <p class="card-text">${cat.bio}</p>
+            <a href="#" class="btn btn-light remove" data-catname="${cat.name}">Remove</a>
+          </div>
+        </div>
+      </div>`    
+      likedCards.push(card)
+    }
+    likedCatsRow.innerHTML = likedCards.join("")
+  }else{
+    //display a message that no cats were found
+    likedCatsRow.innerHTML = "No Liked Cats :("
+  }
+}
+
+  //add event delegation for remove button
+  //add click event listener to likedCatsRow
+  likedCatsRow.addEventListener("click", removeCat)
+
+  function removeCat(e){
+    //check if the target is the remove button
+    if(e.target.classList.contains("remove")){
+      e.preventDefault()
+      const removeCatIndex = findCat(e.target.dataset.catname)
+      console.log(removeCatIndex)
+      // remove the cat from savedCats array
+      savedCats.splice(removeCatIndex, 1)
+
+      //update the local storage with new array
+      localStorage.setItem("mycats", JSON.stringify(savedCats))
+      showCats()
+    }
+  }
+}
