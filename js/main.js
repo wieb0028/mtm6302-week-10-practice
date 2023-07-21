@@ -50,6 +50,7 @@ const cats = [
 ]
 
 const catsRow = document.getElementById("catsRow")
+if(catsRow){
 // loop over the array of data
 for(const cat of cats) {
   console.log(cat.name)
@@ -66,19 +67,19 @@ for(const cat of cats) {
   </div>`
   
   catsRow.insertAdjacentHTML("beforeend", card)
-}
+ }
 
 //adding event listener to the row
 catsRow.addEventListener("click", openModal)
 
-function openModal(e){
+ function openModal(e){
   // delegate the event to the target element if it contains class card-img-top
   if(e.target.classList.contains("card-img-top")){
     const fullSizeImage = e.target.dataset.fullimg
     document.querySelector(".modal-body").innerHTML = `<img src="${fullSizeImage}" alt="placeholder kitten">`
   }
+ }
 }
-
 /*--------------------------------------------------------------------
                                 WEEK 11
 --------------------------------------------------------------------*/
@@ -149,3 +150,8 @@ function findCat(catName){
   }
   return null
 }
+
+//liked cats page
+
+//display cats from localStorage
+
